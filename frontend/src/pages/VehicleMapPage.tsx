@@ -41,17 +41,50 @@ export default function VehicleMapPage() {
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
 
     map.on("load", () => {
-      // Add empty GeoJSON source
+      // GeoJSON source with clustering enabled
       map.addSource("vehicles", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50,
       });
 
-      // Circle layer for vehicles
+      // Cluster circles
       map.addLayer({
-        id: "vehicles-layer",
+        id: "vehicle-clusters",
         type: "circle",
         source: "vehicles",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-radius": 16,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#ffffff",
+          "circle-color": "#1d4ed8",
+        },
+      });
+
+      // Cluster count labels
+      map.addLayer({
+        id: "vehicle-cluster-count",
+        type: "symbol",
+        source: "vehicles",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": "{point_count_abbreviated}",
+          "text-size": 12,
+        },
+        paint: {
+          "text-color": "#ffffff",
+        },
+      });
+
+      // Unclustered vehicle points
+      map.addLayer({
+        id: "vehicle-unclustered",
+        type: "circle",
+        source: "vehicles",
+        filter: ["!", ["has", "point_count"]],
         paint: {
           "circle-radius": 5,
           "circle-stroke-width": 2,
@@ -60,34 +93,57 @@ export default function VehicleMapPage() {
         },
       });
 
-      // Optional: click to show popup with details
-      map.on("click", "vehicles-layer", (e) => {
+      // Click cluster: zoom into it
+      map.on("click", "vehicle-clusters", async (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ["vehicle-clusters"] });
+      const cluster = features[0] as any;
+
+      if (!cluster) return;
+
+        const clusterId = cluster.properties?.cluster_id;
+        const source = map.getSource("vehicles") as maplibregl.GeoJSONSource;
+
+        const zoom = await source.getClusterExpansionZoom(clusterId);
+        const coords = cluster.geometry?.coordinates as [number, number];
+
+        map.easeTo({ center: coords, zoom });
+      });
+
+
+      // Click unclustered point: popup
+      map.on("click", "vehicle-unclustered", (e) => {
         const feature = e.features?.[0] as any;
         if (!feature) return;
 
-        const coords = feature.geometry?.coordinates;
+        const coords = feature.geometry?.coordinates as [number, number];
         const props = feature.properties ?? {};
 
         const vehicleId = props.vehicleId ?? "vehicle";
         const route = props.routeShortName ? `Route ${props.routeShortName}` : "Route N/A";
 
-        if (coords && Array.isArray(coords)) {
-          new maplibregl.Popup()
-            .setLngLat(coords as [number, number])
-            .setHTML(
-              `<div style="font-size:12px">
-                <div style="font-weight:700">${route}</div>
-                <div>${vehicleId}</div>
-              </div>`
-            )
-            .addTo(map);
-        }
+        new maplibregl.Popup()
+          .setLngLat(coords)
+          .setHTML(
+            `<div style="font-size:12px">
+              <div style="font-weight:700">${route}</div>
+              <div>${vehicleId}</div>
+            </div>`
+          )
+          .addTo(map);
       });
 
-      map.on("mouseenter", "vehicles-layer", () => {
+      // Cursor behaviors
+      map.on("mouseenter", "vehicle-clusters", () => {
         map.getCanvas().style.cursor = "pointer";
       });
-      map.on("mouseleave", "vehicles-layer", () => {
+      map.on("mouseleave", "vehicle-clusters", () => {
+        map.getCanvas().style.cursor = "";
+      });
+
+      map.on("mouseenter", "vehicle-unclustered", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "vehicle-unclustered", () => {
         map.getCanvas().style.cursor = "";
       });
 
@@ -135,7 +191,7 @@ export default function VehicleMapPage() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="text-lg font-bold text-gray-900">Live Vehicles</div>
-              <div className="text-sm text-gray-600">Updates every ~10 seconds</div>
+              <div className="text-sm text-gray-600">Clusters when zoomed out</div>
             </div>
             <button
               onClick={loadVehicles}
