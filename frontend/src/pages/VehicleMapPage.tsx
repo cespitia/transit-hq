@@ -1,39 +1,33 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import maplibregl from "maplibre-gl";
 import { fetchJSON } from "../api/client";
-import type { VehiclePositionsResponse, Vehicle } from "../types/vehicles";
+import type { FeatureCollection } from "../types/geojson";
 
-const DEFAULT_CENTER: [number, number] = [-117.1611, 32.7157]; // Downtown SD
+const DEFAULT_CENTER: [number, number] = [-117.1611, 32.7157]; // Downtown San Diego
 const DEFAULT_ZOOM = 13;
 
 export default function VehicleMapPage() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
 
   const [error, setError] = useState<string | null>(null);
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [geo, setGeo] = useState<FeatureCollection | null>(null);
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
-
-  const vehiclesById = useMemo(() => {
-    const m = new Map<string, Vehicle>();
-    for (const v of vehicles) m.set(v.vehicleId, v);
-    return m;
-  }, [vehicles]);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   async function loadVehicles() {
     try {
       setError(null);
-      const data = await fetchJSON<VehiclePositionsResponse>("/api/vehicles");
-      setVehicles(data.vehicles ?? []);
+      const data = await fetchJSON<FeatureCollection>("/api/vehicles.geojson");
+      setGeo(data);
       setLastUpdated(Date.now());
     } catch (e: any) {
       setError(e?.message ?? "Failed to load vehicles");
     }
   }
 
-  // Init map once
+  // Initialize map once
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -45,6 +39,61 @@ export default function VehicleMapPage() {
     });
 
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
+
+    map.on("load", () => {
+      // Add empty GeoJSON source
+      map.addSource("vehicles", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [] },
+      });
+
+      // Circle layer for vehicles
+      map.addLayer({
+        id: "vehicles-layer",
+        type: "circle",
+        source: "vehicles",
+        paint: {
+          "circle-radius": 5,
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#ffffff",
+          "circle-color": "#2563eb",
+        },
+      });
+
+      // Optional: click to show popup with details
+      map.on("click", "vehicles-layer", (e) => {
+        const feature = e.features?.[0] as any;
+        if (!feature) return;
+
+        const coords = feature.geometry?.coordinates;
+        const props = feature.properties ?? {};
+
+        const vehicleId = props.vehicleId ?? "vehicle";
+        const route = props.routeShortName ? `Route ${props.routeShortName}` : "Route N/A";
+
+        if (coords && Array.isArray(coords)) {
+          new maplibregl.Popup()
+            .setLngLat(coords as [number, number])
+            .setHTML(
+              `<div style="font-size:12px">
+                <div style="font-weight:700">${route}</div>
+                <div>${vehicleId}</div>
+              </div>`
+            )
+            .addTo(map);
+        }
+      });
+
+      map.on("mouseenter", "vehicles-layer", () => {
+        map.getCanvas().style.cursor = "pointer";
+      });
+      map.on("mouseleave", "vehicles-layer", () => {
+        map.getCanvas().style.cursor = "";
+      });
+
+      setIsMapLoaded(true);
+    });
+
     mapRef.current = map;
 
     return () => {
@@ -61,43 +110,16 @@ export default function VehicleMapPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Render/update markers when vehicles change
+  // Update GeoJSON source when data changes
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
+    if (!map || !isMapLoaded || !geo) return;
 
-    const markers = markersRef.current;
+    const src = map.getSource("vehicles") as maplibregl.GeoJSONSource | undefined;
+    if (src) src.setData(geo as any);
+  }, [geo, isMapLoaded]);
 
-    // Remove markers that are no longer present
-    for (const [vehicleId, marker] of markers.entries()) {
-      if (!vehiclesById.has(vehicleId)) {
-        marker.remove();
-        markers.delete(vehicleId);
-      }
-    }
-
-    // Add/update markers
-    for (const v of vehicles) {
-      const existing = markers.get(v.vehicleId);
-
-      const el = document.createElement("div");
-      el.className =
-        "w-3 h-3 rounded-full bg-blue-600 ring-2 ring-white shadow";
-
-      // Label via title attribute
-      el.title = v.routeShortName ? `Route ${v.routeShortName}` : v.vehicleId;
-
-      if (!existing) {
-        const marker = new maplibregl.Marker({ element: el })
-          .setLngLat([v.lon, v.lat])
-          .addTo(map);
-
-        markers.set(v.vehicleId, marker);
-      } else {
-        existing.setLngLat([v.lon, v.lat]);
-      }
-    }
-  }, [vehicles, vehiclesById]);
+  const vehicleCount = geo?.features?.length ?? 0;
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -106,18 +128,14 @@ export default function VehicleMapPage() {
           <Link to="/" className="text-sm font-semibold text-blue-700">
             ← Back
           </Link>
-          <Link to="/map" className="text-sm font-semibold text-gray-700">
-            Map
-          </Link>
+          <div className="text-sm font-semibold text-gray-700">Map</div>
         </div>
 
         <div className="mt-3 rounded-2xl bg-white p-4 shadow">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="text-lg font-bold text-gray-900">Live Vehicles</div>
-              <div className="text-sm text-gray-600">
-                Refreshes every ~10 seconds
-              </div>
+              <div className="text-sm text-gray-600">Updates every ~10 seconds</div>
             </div>
             <button
               onClick={loadVehicles}
@@ -130,7 +148,7 @@ export default function VehicleMapPage() {
           {error && <div className="mt-3 text-sm text-red-600">{error}</div>}
 
           <div className="mt-3 text-xs text-gray-500">
-            {vehicles.length} vehicles •{" "}
+            {vehicleCount} vehicles •{" "}
             {lastUpdated ? `updated ${new Date(lastUpdated).toLocaleTimeString()}` : "updating..."}
           </div>
         </div>
@@ -139,9 +157,7 @@ export default function VehicleMapPage() {
           <div ref={mapContainerRef} className="h-[65vh] w-full bg-gray-200" />
         </div>
 
-        <div className="mt-4 text-xs text-gray-500">
-          Map data © OpenStreetMap contributors
-        </div>
+        <div className="mt-4 text-xs text-gray-500">Map data © OpenStreetMap contributors</div>
       </div>
     </div>
   );
