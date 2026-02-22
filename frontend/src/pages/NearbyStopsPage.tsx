@@ -88,8 +88,21 @@ export default function NearbyStopsPage() {
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="mx-auto max-w-md">
         <div className="mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">TransitHQ</h1>
-          <p className="mt-1 text-sm text-gray-600">Nearby MTS stops (mock provider for now)</p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">TransitHQ</h1>
+              <p className="mt-1 text-sm text-gray-600">
+                Nearby MTS stops (mock provider for now)
+              </p>
+            </div>
+
+            <Link
+              to="/map"
+              className="shrink-0 inline-flex items-center justify-center rounded-xl bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow"
+            >
+              View live map
+            </Link>
+          </div>
         </div>
 
         <div className="space-y-3 mb-4">

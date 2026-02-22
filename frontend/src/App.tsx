@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NearbyStopsPage from "./pages/NearbyStopsPage";
 import StopDetailPage from "./pages/StopDetailPage";
+import VehicleMapPage from "./pages/VehicleMapPage";
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<NearbyStopsPage />} />
         <Route path="/stops/:stopId" element={<StopDetailPage />} />
+        <Route path="/map" element={<VehicleMapPage />} />
       </Routes>
     </BrowserRouter>
   );
