@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NearbyStopsPage from "./pages/NearbyStopsPage";
+import StopDetailPage from "./pages/StopDetailPage";
 
 function Home() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<NearbyStopsPage />} />
+        <Route path="/stops/:stopId" element={<StopDetailPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -18,3 +18,22 @@ export interface StopsForLocationResponse {
     }[];
   };
 }
+
+export interface ArrivalDeparture {
+  routeId: string;
+  tripId?: string;
+  routeShortName?: string;
+  headsign?: string;
+  predictedArrivalTime?: number;
+  scheduledArrivalTime?: number;
+  status?: string;
+}
+
+export interface ArrivalsForStopResponse {
+  data: {
+    entry: {
+      stopId: string;
+      arrivalsAndDepartures: ArrivalDeparture[];
+    };
+  };
+}
