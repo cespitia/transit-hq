@@ -11,3 +11,13 @@ def stops_for_location(lat: float, lon: float, radius: int) -> dict:
     path = FIXTURES_DIR / "stops_for_location.json"
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def arrivals_for_stop(stop_id: str) -> dict:
+    path = FIXTURES_DIR / "arrivals_for_stop.json"
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Override stopId dynamically
+    data["data"]["entry"]["stopId"] = stop_id
+    return data

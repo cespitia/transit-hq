@@ -68,3 +68,23 @@ def nearby_stops(request):
         return Response(data)
     except MTSClientError as e:
         return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+    
+    
+@api_view(["GET"])
+def stop_arrivals(request, stop_id):
+    provider = get_provider()
+
+    cache_params = {
+        "provider": provider.__name__,
+        "stop_id": stop_id,
+    }
+
+    def fetch():
+        return provider.arrivals_for_stop(stop_id)
+
+    try:
+        data = get_cached_or_fetch("arrivals_for_stop", cache_params, fetch)
+        return Response(data)
+    except MTSClientError as e:
+        return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+

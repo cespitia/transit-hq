@@ -1,0 +1,31 @@
+{
+  "code": 200,
+  "currentTime": 0,
+  "text": "OK",
+  "version": 2,
+  "data": {
+    "entry": {
+      "stopId": "MTS_70264",
+      "arrivalsAndDepartures": [
+        {
+          "routeId": "MTS_30",
+          "tripId": "MTS_T123",
+          "routeShortName": "30",
+          "predictedArrivalTime": 0,
+          "scheduledArrivalTime": 0,
+          "status": "predicted",
+          "headsign": "Downtown"
+        },
+        {
+          "routeId": "MTS_7",
+          "tripId": "MTS_T456",
+          "routeShortName": "7",
+          "predictedArrivalTime": 0,
+          "scheduledArrivalTime": 0,
+          "status": "scheduled",
+          "headsign": "University Ave"
+        }
+      ]
+    }
+  }
+}
