@@ -1,0 +1,34 @@
+{
+  "code": 200,
+  "currentTime": 0,
+  "text": "OK",
+  "version": 2,
+  "data": {
+    "outOfRange": false,
+    "limitExceeded": false,
+    "references": {
+      "stops": [
+        {
+          "id": "MTS_70264",
+          "name": "Broadway & 1st Ave",
+          "lat": 32.71612,
+          "lon": -117.16283,
+          "code": "70264",
+          "direction": "E"
+        },
+        {
+          "id": "MTS_70312",
+          "name": "C St & 6th Ave",
+          "lat": 32.71791,
+          "lon": -117.15911,
+          "code": "70312",
+          "direction": "N"
+        }
+      ]
+    },
+    "stops": [
+      { "id": "MTS_70264", "distance": 120.5 },
+      { "id": "MTS_70312", "distance": 310.8 }
+    ]
+  }
+}
