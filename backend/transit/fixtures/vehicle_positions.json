@@ -1,0 +1,23 @@
+{
+  "timestamp": 0,
+  "vehicles": [
+    {
+      "vehicleId": "MTS_V1001",
+      "routeShortName": "30",
+      "lat": 32.7169,
+      "lon": -117.1612,
+      "bearing": 90,
+      "speed": 10.5,
+      "updatedAt": 0
+    },
+    {
+      "vehicleId": "MTS_V2044",
+      "routeShortName": "7",
+      "lat": 32.7192,
+      "lon": -117.1588,
+      "bearing": 180,
+      "speed": 7.1,
+      "updatedAt": 0
+    }
+  ]
+}

@@ -21,3 +21,10 @@ def arrivals_for_stop(stop_id: str) -> dict:
     # Override stopId dynamically
     data["data"]["entry"]["stopId"] = stop_id
     return data
+
+
+def vehicle_positions() -> dict:
+    path = FIXTURES_DIR / "vehicle_positions.json"
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+

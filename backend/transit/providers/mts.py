@@ -8,3 +8,7 @@ def stops_for_location(lat: float, lon: float, radius: int) -> dict:
 
 def arrivals_for_stop(stop_id: str) -> dict:
     return mts_arrivals_for_stop(stop_id)
+
+
+def vehicle_positions() -> dict:
+    raise NotImplementedError("MTS vehicle_positions not implemented yet")

@@ -88,3 +88,20 @@ def stop_arrivals(request, stop_id):
     except MTSClientError as e:
         return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
 
+
+@api_view(["GET"])
+def vehicles(request):
+    provider = get_provider()
+
+    cache_params = {"provider": provider.__name__}
+
+    def fetch():
+        return provider.vehicle_positions()
+
+    try:
+        data = get_cached_or_fetch("vehicle_positions", cache_params, fetch)
+        return Response(data)
+    except NotImplementedError as e:
+        return Response({"error": str(e)}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    except MTSClientError as e:
+        return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
