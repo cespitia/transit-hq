@@ -4,6 +4,7 @@ from rest_framework import status
 
 from .cache import get_cached_or_fetch, redis_client
 from .providers.router import get_provider
+from .geojson import vehicles_to_geojson
 
 # Only needed when provider=mts and upstream errors occur.
 # Safe to import even if you are using mock.
@@ -101,6 +102,25 @@ def vehicles(request):
     try:
         data = get_cached_or_fetch("vehicle_positions", cache_params, fetch)
         return Response(data)
+    except NotImplementedError as e:
+        return Response({"error": str(e)}, status=status.HTTP_501_NOT_IMPLEMENTED)
+    except MTSClientError as e:
+        return Response({"error": str(e)}, status=status.HTTP_502_BAD_GATEWAY)
+
+
+@api_view(["GET"])
+def vehicles_geojson(request):
+    provider = get_provider()
+
+    cache_params = {"provider": provider.__name__}
+
+    def fetch():
+        return provider.vehicle_positions()
+
+    try:
+        payload = get_cached_or_fetch("vehicle_positions", cache_params, fetch)
+        geo = vehicles_to_geojson(payload)
+        return Response(geo)
     except NotImplementedError as e:
         return Response({"error": str(e)}, status=status.HTTP_501_NOT_IMPLEMENTED)
     except MTSClientError as e:
