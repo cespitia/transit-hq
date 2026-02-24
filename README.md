@@ -71,6 +71,19 @@ Frontend (React + TypeScript) -> Backend API (Django REST) -> Redis (real-time c
 -Provider abstraction pattern
 
 ## Screenshots
+### Nearby stops
+![Nearby stops initial](docs/screenshots/nearby-stops-initial.png)
+![Nearby stops loaded](docs/screenshots/nearby-stops-loaded.png)
+
+### Stop arrivals
+![Stop detail arrivals](docs/screenshots/stop-arrival-details.png)
+
+### Live vehicles map
+![Vehicles map clusters](docs/screenshots/vehicles-map.png)
+![Vehicles map clusters](docs/screenshots/vehicles-map-clusters.png)
+
+### Vehicle details
+![Vehicles map vehicles](docs/screenshots/vehicles-map-details.png)
 
 ## Getting Started
 TransitHQ can be run locally using Docker. By default, it runs with mock data and does not require any API keys.
