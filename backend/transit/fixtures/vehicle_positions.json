@@ -1,23 +1,32 @@
 {
   "timestamp": 0,
   "vehicles": [
-    {
-      "vehicleId": "MTS_V1001",
-      "routeShortName": "30",
-      "lat": 32.7169,
-      "lon": -117.1612,
-      "bearing": 90,
-      "speed": 10.5,
-      "updatedAt": 0
-    },
-    {
-      "vehicleId": "MTS_V2044",
-      "routeShortName": "7",
-      "lat": 32.7192,
-      "lon": -117.1588,
-      "bearing": 180,
-      "speed": 7.1,
-      "updatedAt": 0
-    }
+    { "vehicleId": "MTS_V1001", "routeShortName": "30", "lat": 32.7157, "lon": -117.1611, "bearing": 90, "speed": 10, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1002", "routeShortName": "7",  "lat": 32.7160, "lon": -117.1605, "bearing": 120, "speed": 8, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1003", "routeShortName": "3",  "lat": 32.7163, "lon": -117.1598, "bearing": 200, "speed": 9, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1004", "routeShortName": "901","lat": 32.7171, "lon": -117.1620, "bearing": 180, "speed": 12, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1005", "routeShortName": "992","lat": 32.7149, "lon": -117.1625, "bearing": 45, "speed": 11, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1006", "routeShortName": "11", "lat": 32.7143, "lon": -117.1602, "bearing": 270, "speed": 7, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1007", "routeShortName": "120","lat": 32.7150, "lon": -117.1587, "bearing": 310, "speed": 9, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1008", "routeShortName": "215","lat": 32.7168, "lon": -117.1589, "bearing": 140, "speed": 13, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1009", "routeShortName": "83", "lat": 32.7173, "lon": -117.1600, "bearing": 60, "speed": 6, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1010", "routeShortName": "280","lat": 32.7180, "lon": -117.1618, "bearing": 220, "speed": 15, "updatedAt": 0 },
+
+    { "vehicleId": "MTS_V1011", "routeShortName": "30", "lat": 32.7159, "lon": -117.1632, "bearing": 150, "speed": 10, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1012", "routeShortName": "7",  "lat": 32.7164, "lon": -117.1635, "bearing": 210, "speed": 8, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1013", "routeShortName": "3",  "lat": 32.7170, "lon": -117.1640, "bearing": 180, "speed": 9, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1014", "routeShortName": "901","lat": 32.7145, "lon": -117.1638, "bearing": 75, "speed": 11, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1015", "routeShortName": "992","lat": 32.7138, "lon": -117.1619, "bearing": 330, "speed": 6, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1016", "routeShortName": "11", "lat": 32.7141, "lon": -117.1595, "bearing": 90, "speed": 7, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1017", "routeShortName": "120","lat": 32.7152, "lon": -117.1582, "bearing": 240, "speed": 9, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1018", "routeShortName": "215","lat": 32.7165, "lon": -117.1578, "bearing": 120, "speed": 13, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1019", "routeShortName": "83", "lat": 32.7178, "lon": -117.1591, "bearing": 60, "speed": 6, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1020", "routeShortName": "280","lat": 32.7184, "lon": -117.1604, "bearing": 200, "speed": 15, "updatedAt": 0 },
+
+    { "vehicleId": "MTS_V1021", "routeShortName": "30", "lat": 32.7161, "lon": -117.1614, "bearing": 150, "speed": 10, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1022", "routeShortName": "7",  "lat": 32.7154, "lon": -117.1608, "bearing": 210, "speed": 8, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1023", "routeShortName": "3",  "lat": 32.7147, "lon": -117.1599, "bearing": 180, "speed": 9, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1024", "routeShortName": "901","lat": 32.7169, "lon": -117.1629, "bearing": 75, "speed": 11, "updatedAt": 0 },
+    { "vehicleId": "MTS_V1025", "routeShortName": "992","lat": 32.7175, "lon": -117.1615, "bearing": 330, "speed": 6, "updatedAt": 0 }
   ]
 }
