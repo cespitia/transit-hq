@@ -27,16 +27,14 @@ TransitHQ is evolving from a real-time arrival interface into a transit intellig
 Frontend (React + TypeScript) -> Backend API (Django REST) -> Redis (real-time cache) + Postgres (static + history)
 
 ## Design Principles
-- Provider abstraction layer: Seamlessly switch between mock data and live MTS feeds.
-- Stable internal API contract: The frontend never depends directly on external agency formats.
-- GeoJSON-native mapping: Enables clustering, filtering, heatmaps, and advanced analytics.
-- Scalable data model: Built to support historical ingestion and reliability analysis.
-
-GeoJSON-native mapping
-Enables clustering, filtering, heatmaps, and advanced analytics.
-
-Scalable data model
-Built to support historical ingestion and reliability analysis.
+- Provider abstraction layer
+  - Seamlessly switch between mock data and live MTS feeds.
+- Stable internal API contract
+  - The frontend never depends directly on external agency formats.
+- GeoJSON-native mapping
+  - Enables clustering, filtering, heatmaps, and advanced analytics.
+- Scalable data model
+  - Built to support historical ingestion and reliability analysis.
 
 ## Roadmap
 ### Phase 1: MVP (MTS real-time gateway)
@@ -73,3 +71,45 @@ Built to support historical ingestion and reliability analysis.
 -Provider abstraction pattern
 
 ## Screenshots
+
+## Getting Started
+TransitHQ can be run locally using Docker. By default, it runs with mock data and does not require any API keys.
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/transit-hq.git
+cd transit-hq
+```
+### 2. Start the backend services
+```bash
+docker compose up --build
+```
+This will start:
+- Django REST API (http://localhost:8000)
+- Redis (real-time cache)
+- Postgres (database)
+
+### 3. Start the frontend
+In a separate terminal:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend will run at:
+```bash
+http://localhost:5173
+```
+
+## Available Endpoints
+- GET /api/health
+- GET /api/stops/nearby
+- GET /api/stops/<stop_id>/arrivals
+- GET /api/vehicles.geojson
+- GET /api/vehicles/<vehicle_id>
+
+## Development Notes
+- Map rendering uses MapLibre with OpenStreetMap raster tiles.
+- Vehicle positions are delivered in GeoJSON format.
+- Redis is used to cache upstream API responses.
+- The provider abstraction layer allows seamless switching between mock and live MTS data.
